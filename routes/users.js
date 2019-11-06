@@ -1,9 +1,8 @@
 const router = require('express').Router();
 
-/* Endpoint: https://domain.com/users */
-
+// GET https://domain.com/users
 router.get('/', (req, res) => {
-    res.render('users.ejs', { name: "Austin" });
+    res.render('users.ejs', { title: 'Users' });
 });
 
 module.exports = router;

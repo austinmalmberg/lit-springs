@@ -3,6 +3,10 @@
 
   <p>Don't have a username? <a href="/register">Register</a></p>
 
+  <% if (locals.error != null) { %>
+    <p><%= error %></p>
+  <% } %>
+
   <form action="/login" method="post">
 
     <div class="form-group">
