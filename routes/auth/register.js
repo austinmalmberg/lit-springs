@@ -1,37 +1,33 @@
 const router = require('express').Router();
 const bcrypt = require('bcrypt');
-const User = require('../../models/user');
+const { createUser } = require('../../models/user');
 
-// GET https://domain.com/register
+// GET https://domain.tld/register
 router.get('/', (req, res) => {
-  res.render('register.ejs', { title: 'Register' });
+  res.render('register', { title: 'Register' });
 });
 
-// POST https://domain.com/register
+// POST https://domain.tld/register
 router.post('/', async (req, res) => {
 
   // TODO: redirect to login if email already exists
 
-  try {
-    const hashedPassword = await bcrypt.hash(req.body.password, 10);
-    const user = new User({
-      name: req.body.name,
-      email: req.body.email,
-      password: hashedPassword
-    });
+  const hashedPassword = await bcrypt.hash(req.body.password, 10);
+  createUser(req.body.email, req.body.name, hashedPassword, (err, newUser) => {
 
-    // add user to database
-    user.save((err, newUser) => {
+    if (err) {
 
-      if (err)
-        res.redirect('/register');
-      else
-        res.redirect('/login');
+      console.log(`Could not register ${req.body.email}`);
+      res.redirect('/register');
 
-    });
-  } catch (error) {
-    res.redirect('/register');
-  }
+    } else {
+
+      console.log(`New user created: ${req.body.email}`);
+      res.redirect('/login');
+
+    }
+
+  });
 });
 
 module.exports = router;

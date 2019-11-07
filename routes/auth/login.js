@@ -1,36 +1,17 @@
 const router = require('express').Router();
 const bcrypt = require('bcrypt');
-const User = require('../../models/user');
+const passport = require('passport');
 
-// GET https://domain.com/login
+// GET https://domain.tld/login
 router.get('/', (req, res, next) => {
   res.render('login', { title: 'Login' });
 });
 
-// POST https://domain.com/login
-router.post('/', async (req, res) => {
-
-  try {
-    User.findOne({ email: req.body.email }, (err, user) => {
-
-      if (err) {
-        res.render('login', { error: 'There was an error in the query' });
-      }
-
-      bcrypt.compare(req.body.password, user.password, (err, access) => {
-
-        if (err)
-          res.render('login', { error: 'Passwords do not match' });
-
-        res.redirect('/users');
-      });
-
-
-    });
-
-  } catch (error) {
-    res.redirect('/login', { error: 'There was another problem'});
-  }
-});
+// POST https://domain.tld/login
+router.post('/', passport.authenticate('local', {
+  sucessRedirect: '/',
+  failureRedirect: '/login',
+  failureFlash: true
+}));
 
 module.exports = router;

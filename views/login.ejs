@@ -3,8 +3,9 @@
 
   <p>Don't have a username? <a href="/register">Register</a></p>
 
-  <% if (locals.error != null) { %>
-    <p><%= error %></p>
+  <%/* the messages object is created by express-session */%>
+  <% if (messages.error) { %>
+    <p class="alert alert-warning"><%= messages.error %></p>
   <% } %>
 
   <form action="/login" method="post">
