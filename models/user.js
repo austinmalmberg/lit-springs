@@ -9,7 +9,7 @@ const userSchema = new mongoose.Schema({
   name: {
     type: String
   },
-  password: {
+  passwordHash: {
     type: String,
     required: true
   },
@@ -26,11 +26,11 @@ function findUserById(id, callback) {
   User.findOne({ 'id': id }, callback);
 }
 
-function createUser(email, name, password, callback) {
+function createUser(email, name, passwordHash, callback) {
   const user = new User({
     'email': email,
     'name': name,
-    'password': password
+    'passwordHash': passwordHash
   });
 
   user.save(callback);
